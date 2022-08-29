@@ -3,7 +3,7 @@ This repository contains the custom scripts used in Pajanoja et al, 2022.
 
 ## Methods
 - [scRNA-seq](#scRNA-seq)
-- [bulk RNA-seq](#bulk RNA-seq)
+- [bulk RNA-seq](#bulk-RNA-seq)
 - [scMST](#scMST)
 
 
