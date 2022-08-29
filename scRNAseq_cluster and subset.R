@@ -1,12 +1,8 @@
-
-
 # author : Ceren Pajanoja
 # date   : September 2022
 
 # Script definition: Analysis for Figure 3 and Sup Figure 3
-
 # Merge all stages (after SoupX and Doublet)
-
 
 library(dplyr)
 library(Seurat)
@@ -20,28 +16,23 @@ library(RColorBrewer)
 nc.data <- merge(nc.dataH5,c(nc.data1, nc.data4, nc.data7), add.cell.ids = c("HH5","1som","4som","7som"))
 
 #:::::::::::::::::::::::::::::::::::::::    FIRST STEPS   ::::::::::::::::::::::::::::::::::::::::::::
-
 mito.genes1 <- grep(pattern = "^ND1$|^ND2$|^COX1$|^COX2$|^ATP8$|^ATP6$|^COX3$|^ND3$|^ND4L$|^ND4$|^ND5$|^ND6$|^CYB$", x = rownames(x = nc.data), value = TRUE)
 mito.genes2 <- grep(pattern = '^MT-', x = rownames(x = nc.data), value = TRUE)
 mito.genes <- c(mito.genes1,mito.genes2)
 percent.mt <- Matrix::colSums(nc.data[mito.genes, ])/Matrix::colSums(nc.data)
 nc.data <- AddMetaData(object = nc.data, metadata = percent.mt, col.name = "percent.mt")
-
 # cell cycle difference
 s.genes <- cc.genes$s.genes
 g2m.genes <- cc.genes$g2m.genes
 nc.data <- CellCycleScoring(nc.data, s.features = s.genes, g2m.features = g2m.genes, set.ident = TRUE)
 nc.data$CC.Difference <- nc.data$S.Score - nc.data$G2M.Score
-
 # check counts, genes, and percent mito distribution before filtering
 VlnPlot(nc.data, c("nFeature_RNA","nCount_RNA","percent.mt"), group.by = "orig.ident", pt.size = 0,
         cols = c('HH5' = '#e6c029', '1som' = '#fa7148', '4som' = '#4cd2ff','7som' = '#2f7cff'))
-
 # filter below
 nc.data <- subset(nc.data, subset = nFeature_RNA > 1500 & percent.mt < 1 & nFeature_RNA < 4000)
 VlnPlot(nc.data, c("nFeature_RNA","nCount_RNA","percent.mt"), group.by = "orig.ident", pt.size = 0,
               cols = c('HH5' = '#e6c029', '1som' = '#fa7148', '4som' = '#4cd2ff','7som' = '#2f7cff'))
-
 # Perform normalization, PCA and UMAP
 DefaultAssay(object = nc.data) <- "RNA"
 nc.data<- NormalizeData(nc.data)
@@ -54,18 +45,14 @@ nc.data <- FindNeighbors(object = nc.data, dims = 1:15)
 nc.data <- FindClusters(object = nc.data, resolution = 0.2, method = "pca")
 nc.data<- RunUMAP(object = nc.data, reduction = "pca", 
                         dims = 1:15)
-
 #set idents into order 
 my_levels <- c("HH5","1som","4som","7som")
 nc.data@active.ident <- factor(x = nc.data@active.ident, levels = my_levels)
 nc.data@meta.data[["old.ident"]] <-Idents(nc.data)
-
 set.seed(42)
 DimPlot(nc.data, reduction = "umap", label = F, label.size = 6, pt.size= 1, group.by = "old.ident", cols = c('HH5' = '#e6c029', '1som' = '#fa7148', '4som' = '#4cd2ff','7som' = '#2f7cff'))
 
-
 #:::::::::::::::::::::::::::::::::::   FIND DE GENES   :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
 # Find marker genes for each cluster
 nc.data.markers <- FindAllMarkers(object = nc.data, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.2)
 # Heatmap of the top 15 markers in each cluster
@@ -73,9 +60,7 @@ top8 <- nc.data.markers %>% group_by(cluster) %>% top_n(n = 15, wt = avg_log2FC)
 DoHeatmap(object = nc.data, features = top8$gene) + scale_fill_gradientn(colours = rev(brewer.pal(11,"RdBu"))) + NoLegend()
 write.csv(nc.data.markers, file="DE_genes_4stages.csv", row.names = T)
 
-
 #::::::::::::::::::::::::::::::::::::  RENAME CLUSTERS BASED ON MARKERS  :::::::::::::::::::::::::::::::::::::::::
-
 nc.data[["Cell.Type"]] <- nc.data$seurat_clusters
 Idents(nc.data) <- "Cell.Type"
 current.origcluster.ids <- c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
@@ -83,7 +68,6 @@ new.origcluster.ids <- c("Ectoderm", "Ectoderm", "Ectoderm", "Endoderm", "Mesode
 # embed them in
 nc.data@meta.data$Cell.Type <- plyr::mapvalues(x = nc.data@meta.data$Cell.Type, from = current.origcluster.ids, to = new.origcluster.ids)
 nc.data@active.ident <- nc.data$Cell.Type
-
 DimPlot(nc.data, reduction = "umap", label = F, pt.size= 1, cols = c('Ectoderm' = 'mediumseagreen', 'Endoderm' = 'tan1', 'Mesoderm' = 'violet','Notochord' = 'mediumpurple3'))
 
 # Feature Plots: 
@@ -101,9 +85,7 @@ patchwork::wrap_plots( FeaturePlot(nc.data, features=c("NANOG","KLF4","Pou5f3"),
 plot <- DotPlot(nc.data,col.min=0 ,features = c("TFAP2A","DLX5","CLDN1","SOX2","NES","MYCN","SOX17","KRT7","HHEX","ALX1","TWIST1","HAND2","PITX2","CHRD","TBXT"))+ scale_colour_gradient2(low = "#1c0333", mid = "#bec4dc", high = "#f7aa3e")+ scale_size(range = c(1.1, 8)) & theme(text = element_text(size = 10, face = "bold"))
 plot + coord_flip()
 
-
 #::::::::::::::::::::::::::::::::::::  SUBSET CLUSTERS   :::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
 # Subset only Ectoderm cluster
 nc.data_filtered <- subset(nc.data, idents = c("Ectoderm"))
 DefaultAssay(object = nc.data_filtered) <- "RNA"
@@ -116,14 +98,11 @@ ElbowPlot(nc.data_filtered)
 nc.data_filtered <- FindNeighbors(object = nc.data_filtered, dims = 1:15)
 nc.data_filtered <- FindClusters(object = nc.data_filtered, resolution = 0.2, method = "pca")
 nc.data_filtered<- RunUMAP(object = nc.data_filtered, reduction = "pca", dims = 1:10)
-
 set.seed(42)
 DimPlot(nc.data_filtered, reduction = "umap", label = F, label.size = 6, pt.size= 1, group.by = "old.ident", cols = c('HH5' = '#e6c029', '1som' = '#fa7148', '4som' = '#4cd2ff','7som' = '#2f7cff'))
 
-
 #::::::::::::::::::::::::::::::::::::  CALCULTE GENE POSITIVE CELLS IN EACH CLUSTER   :::::::::::::::::::::::::::::::
 Idents(nc.data_filtered) <- "orig.ident"
-
 # Name each stage as a variable 
 HH5 <-subset(nc.data_filtered, idents = c("HH5"))
 Som1 <-subset(nc.data_filtered, idents = c("1som"))
@@ -131,7 +110,6 @@ Som4 <-subset(nc.data_filtered, idents = c("4som"))
 Som7 <-subset(nc.data_filtered, idents = c("7som"))
 
 cal_clust <- HH5 # calc by stage
-
 GOI1 <- "NANOG"
 GOI2 <- "KLF4"
 GOI3 <- "Pou5f3"
@@ -145,7 +123,6 @@ GOI4.cells <- length(which(FetchData(cal_clust, vars = GOI4) > 0))
 GOI5.cells <- length(which(FetchData(cal_clust, vars = GOI5) > 0))
 # Total count of cells in this cluster
 all.cells.incluster <- table(cal_clust@active.ident)
-
 #Save results for plotting
 #counts for stage1: HH5
 c1.total <- all.cells.incluster
@@ -190,7 +167,6 @@ ggplot(data, aes(fill=goi, y=counts, x=clustID)) +  geom_bar(position="stack", s
   theme(panel.background = element_rect(fill = "white", colour = "grey50",size=1),
   panel.grid.major.y = element_line(color = "grey50",size = 0.5,linetype = 2), axis.title.x = element_text(color="black", size=16, face="bold"),
   axis.title.y = element_text(color="black", size=16, face="bold"), axis.text.x  = element_text(size = 15),  axis.text.y = element_text(size = 13))
-
 
 #::::::::::::::::::::::::::::::::::::  CALCULTE MODULE SCORES   :::::::::::::::::::::::::::::::::::::::
 myMarkers_PE  <- read.csv("gene_lists/Pan_ecto_genes.csv")
