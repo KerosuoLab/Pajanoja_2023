@@ -11,10 +11,7 @@ Samples used for each method is represented below:
 
 
 ### scRNA-seq
-Ambient RNA removal: [SoupX](https://github.com/constantAmateur/SoupX)
-
-Doublet removal: [DoubletFinder](https://github.com/chris-mcginnis-ucsf/DoubletFinder)
-
+Data clean-up: Ambient RNA removal-[SoupX](https://github.com/constantAmateur/SoupX) and Doublet removal-[DoubletFinder](https://github.com/chris-mcginnis-ucsf/DoubletFinder).
 Fig3 and SupFig3 single cell sequencing analysis scripts are [posted here](https://github.com/KerosuoLab/Pajanoja_2022/blob/main/scRNAseq_cluster%20and%20subset.R). 
 
 ### bulk RNA-seq
