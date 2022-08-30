@@ -1,7 +1,7 @@
 # author : Ceren Pajanoja
 # date   : September 2022
 
-# Script definition: Analysis for bulk RNAseq in Figure 2, Figure 4, Sup Fig2 and Sup Fig4
+# Script definition: Analysis for bulk RNAseq in Figure 2 and Sup Figure 2 
 
 library(DESeq2)
 library(biomaRt)
