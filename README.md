@@ -1,5 +1,6 @@
 # Pajanoja_2022
-This repository contains the custom scripts used in Pajanoja et al, 2022.
+This repository contains the custom scripts used in Pajanoja manuscript, "Maintenance of pluripotency in entire post-gastrulation ectoderm
+enables neural crest formation", 2022.
 
 
 *Samples used for each method is represented below:*
