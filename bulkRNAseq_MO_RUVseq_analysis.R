@@ -3,7 +3,6 @@
 
 # Script definition: RNAseq Analysis with RUVseq pipeline for Figure 4 and Sup Figure 4
 
-
 #install biocversion
 BiocManager::install("BiocVersion")
 #Install if first time
