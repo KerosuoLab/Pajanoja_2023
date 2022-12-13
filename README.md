@@ -1,5 +1,5 @@
-# Pajanoja_2022
-This repository contains the custom scripts used in Pajanoja manuscript, "Maintenance of pluripotency in the entire ectoderm enables neural crest formation and challenges dogmatic viewpoints of gastrulation", 2022.
+# Pajanoja_2023
+This repository contains the custom scripts used in Pajanoja manuscript, "Maintenance of pluripotency in the entire ectoderm enables neural crest formation and challenges dogmatic viewpoints of gastrulation", 2023.
 
 
 *Samples used for each method is represented below:*
