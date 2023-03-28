@@ -62,7 +62,7 @@ Interest_group= intersect(High_Value_Both,Gene_3_High(:,1));
 % Here we use variable name extracted from z-core script instead of heatmap
 figure, 
 
-cmp = jet(length(indices)); % why does this need to be in the same length as indices?
+
 % to assign colors of choice: 
 cmp(1,:)  = [0.9,0,0];   %red
 cmp(2,:)  = [0,0.1,1];   %blue 
