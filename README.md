@@ -1,5 +1,5 @@
 # Pajanoja_2023
-This repository contains the custom scripts used in Pajanoja manuscript, "Maintenance of pluripotency in the entire ectoderm enables neural crest formation", 2023.
+This repository contains the custom scripts used in Pajanoja manuscript, "Maintenance of pluripotency-like signature in the entire ectoderm leads to neural crest stem cell  potential", 2023.
 
 
 *Samples used for each method is represented below:*
